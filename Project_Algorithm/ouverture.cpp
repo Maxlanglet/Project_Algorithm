@@ -19,7 +19,7 @@
 
 using namespace std;
 
-vector<char> read_psq( ifstream &file){
+vector<char> read_psq(ifstream &file){
     vector<char> buffer;
     char buf;
     while (!file.eof()) {

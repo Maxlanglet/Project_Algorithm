@@ -16,6 +16,7 @@
 #include <fstream>
 #include <bitset>
 #include <string>
+#include <cstring>
 #include <sstream>
 #include <cstdio>
 #include <string.h>
@@ -23,6 +24,7 @@
 #include <vector>
 #include <chrono>
 #include <ctime>
+#include <map>
 
 using namespace std;
 

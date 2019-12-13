@@ -1,4 +1,7 @@
-#include "binaire.h"
+#ifndef header_h
+#define header_h
+
+#include "blosum.hpp"
 
 class Header : public Binaire
 {
@@ -13,9 +16,10 @@ private:
 	
 public :
 	Header(string adr);
-	void acquiert(int offset);
+	void acquiert(long offset);
 	void getData();
 	
 	
 	
 };
+#endif

@@ -33,7 +33,7 @@ string Header::read_string(){
 		//cout<<"size size : "<<mystr<<endl;
 		
 		size = Hex_Int(mystr, size2);
-		delete buffer;
+        delete[] buffer;
 		
 	}
 	
@@ -42,7 +42,7 @@ string Header::read_string(){
 	
 	res = string(text, (size));
 	
-	delete text;
+    delete[] text;
 	
 	return res;
 }
@@ -63,12 +63,12 @@ int Header::read_int(){
 	string mystr = ss.str();
 	res = Hex_Int(mystr, (int)size);
 	
-	delete buffer;
+    delete[] buffer;
 	
 	return res;
 }
 
-void Header::acquiert(int offset){
+void Header::acquiert(long offset){
 	open_fichier();
 	f.seekg(offset);
 	//int pos = f.tellg();
