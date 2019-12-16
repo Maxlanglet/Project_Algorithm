@@ -45,11 +45,19 @@ void Offsets::offset(){
            }
           }
         //buffer.insert(buffer.begin(), 0);//ajoute le 0
+        info.clear();
+        info = vector<int>(head_offsets.begin(),head_offsets.begin()+offset);
         head_offsets = vector<int>(head_offsets.begin() + offset, head_offsets.end()); //probleme dans les vecteurs de taille diff 1
         //head_offsets = v2;
         cout << "[+] Finis header" << endl;
            //return v2;
-
+        
+        int pos = f.tellg();
+        //cout<<"pos: "<<pos<<endl;
+        print_info(&f);
+        f.seekg(pos);
+        pos = f.tellg();
+        //cout<<"pos: "<<pos<<endl;
 
         //sequence offset
         seq_offsets.clear();
@@ -81,6 +89,62 @@ void Offsets::header_offset(){
    
 }
 
+void Offsets::print_info(ifstream* f){
+    int version = info[0];
+    int type_residu = info[1];
+    int size_title = info[2];
+    
+    ofstream result("resultat.txt");
+    result<<"Information about the database :"<<endl;
+    result<<"Version : "<<version<<endl;
+    
+    f->seekg(12); //debut de la séquence qui contient le titre
+    int pos = f->tellg();
+    //cout<<"pos: "<<pos<<endl;
+    
+    char* titre = new char[size_title];
+    f->read(titre,size_title);
+    string title = string(titre, size_title);
+    //cout<<title<<endl;
+    result<<"Name : "<<title<<endl;;
+    
+    int size_date = 0;
+    f->read((char*)&size_date, sizeof(int));
+    size_date = (int)(bswap_32(size_date));
+    
+    char* date = new char[size_date];
+    f->read(date, size_date);
+    string date_str = string(date, size_date);
+    //cout<<date_str<<endl;
+    result<<"Date : "<<date_str<<endl;
+    
+    delete[] titre;
+    delete[] date;
+    
+    pos = f->tellg();
+    while(pos%4 != 0){
+        pos++;
+    }
+    f->seekg(pos);
+    
+    int sequence = 0;
+    f->read((char*)&sequence, sizeof(int));
+    sequence = (int)(bswap_32(sequence));
+    
+    long long residus = 0;
+    f->read((char*)&residus, 8);
+    
+    int longest_sequence = 0;
+    f->read((char*)&longest_sequence, sizeof(int));
+    longest_sequence = (int)(bswap_32(longest_sequence));
+    
+    //cout<<"nbre de seq : "<<sequence<<" nbre de résidu : "<<residus<<" taille max séq : "<<longest_sequence<<endl;
+    result<<"The database contains "<<residus<<" residues in "<<sequence<<" sequences"<<endl;
+    result<<"The longest sequence has "<<longest_sequence<<" residues \n"<<endl;
+    result.close();
+    
+    
+}
 
 int Offsets::get_head_offset(int pos){
     return head_offsets[pos];

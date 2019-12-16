@@ -109,7 +109,7 @@ void Header::getData(ofstream* res){
 	cout<<"numero : "<<quantieme<<endl;
 	cout<<"taxid : "<<taxid<<endl;
      */
-    *res << left << base<<" | "<<quantieme<<" | "<<nom<<" | "<<taxid << setw(20) << " | score : ";
+    *res << left << base<<" | "<<quantieme<<" | "<<nom<<" | "<<taxid << setw(20) << " | score :";
     
 }
 

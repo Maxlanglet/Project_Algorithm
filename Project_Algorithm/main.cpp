@@ -43,11 +43,15 @@ int main(int argc, const char * argv[]) {
     string fasta = Fasta_To_String(input);
     sequence.read_psq();
     offsets.offset();
+    
+    string matrice;
     if (argc>=4) {
         swipe.initialise_blosum(argv[3]);
+        matrice = argv[3];
     }
     else{
         swipe.initialise_blosum();
+        matrice = "blossum62";
     }
     
     int gap_penality = 0;
@@ -113,7 +117,7 @@ int main(int argc, const char * argv[]) {
         }
         else if(score_max.size() == 20 && score_max.begin()->first < score){
             score_max.erase(score_max.begin());
-            //score_max.insert(pair<double, int>(score,g));
+            score_max.insert(pair<double, int>(score,g));
         }
         
         end2 = std::chrono::system_clock::now();
@@ -135,7 +139,9 @@ int main(int argc, const char * argv[]) {
     head.open_fichier();
     
     auto timenow =chrono::system_clock::to_time_t(chrono::system_clock::now());
-    ofstream result("resultat.txt");
+    ofstream result("resultat.txt", ios::app);
+    result<<"Matrix used : "<<matrice<<endl;
+    result<<"Gap penalty : "<<gap_penality<<" \nExtension penalty : "<<extension_penality<<"\n"<<endl;
     result << "Smith-Waterman Algorithm " << ctime(&timenow) << endl;
     result << endl;
 
@@ -143,14 +149,14 @@ int main(int argc, const char * argv[]) {
     result << "Average time per sequence: " << tempsmoyen/(fin-init) << "s" << endl; //TODO: a changer ici
     result << endl;
     
-    result << "Sequence producing significant alignements :" << endl;
+    result << "Sequence producing significant alignements, classed with increasing score :" << endl;
     result <<endl;
     
     for(itr = score_max.begin(); itr != score_max.end(); ++itr){
         off = offsets.get_head_offset((int)((itr)->second - 1));
         head.acquiert(off);
         head.getData(&result);
-        result<< setw(20) << itr->first<<endl;
+        result<<itr->first<<"\n"<<endl;
         
     }
     swipe.free_blosum();
