@@ -5,11 +5,7 @@
 //utiliser getData pour imprimer le nom de la proteine et de la base de donnée ainsi que les int
 
 Header::Header(string adr) : Binaire(adr),nom(""),base(""),quantieme(0),taxid(0){
-	//Binaire(str);
-	//nom = "";
-	//base = "";
-	//quantieme = 0;
-	//taxid = 0;
+	
 }
 
 string Header::read_string(){
@@ -18,10 +14,10 @@ string Header::read_string(){
 	int size = 0;
 	f.read((char*)&size, 1);
 	
+    //gestion du cas où la longueur de la chaine de caractère était trop important pour être stocké sur 7 bits
 	if(int(size) >= 128){
 		
 		int size2 = (size-128);
-		//cout<<"long string, size2 : "<<size2<<endl;
 		char* buffer = new char[size2];
 		f.read(buffer,size2);
 		
@@ -30,7 +26,6 @@ string Header::read_string(){
 			ss<<setfill('0')<<setw(2)<<hex<<(0xff & (int)buffer[i]);
 		}
 		string mystr = ss.str();
-		//cout<<"size size : "<<mystr<<endl;
 		
 		size = Hex_Int(mystr, size2);
         delete[] buffer;
@@ -74,6 +69,9 @@ void Header::acquiert(int offset){
 	//int pos = f.tellg();
 	int var = 0;
 	char octet;
+    //on sait que les informations contenue dans un header sont 2 strings et 2 int et ils sont mis dans l'ordre suivant:
+    //nom de la séquence, nom de la base, numéro dans la base, taxid
+    //les string sont précédés d'un octet où est stocké la valeur 26 et les int d'un octet où est stocké 2
 	while(var < 4){
 		f.read(&octet, 1);
 		if(int(octet) == 26){
@@ -101,19 +99,13 @@ void Header::acquiert(int offset){
 }
 
 void Header::getData(ofstream* res){
-    //cout << left << base<<"|"<<quantieme<< setw(2) << nom << endl;
-    //*res << left << "Sequence with significant alignements" << setw(20) << "Score(bits)" << endl;
-    /*
-	cout<<"nom proteine : "<<nom<<endl;
-	cout<<"nom base de donnée : "<<base<<endl;
-	cout<<"numero : "<<quantieme<<endl;
-	cout<<"taxid : "<<taxid<<endl;
-     */
+    //affiche dans le fichier resultat les information sur la séquence
     *res << left << base<<" | "<<quantieme<<" | "<<nom<<" | "<<taxid << setw(20) << " | score :";
     
 }
 
 int Header::Hex_Int(string hex, int size){
+    //permet de transformer 2 caractère d'hexadécimal en un entier
 	size = 2*size;
 	int res =0;
 	for (int i = 0; i<size;i++){

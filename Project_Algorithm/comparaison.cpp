@@ -4,6 +4,8 @@
 //
 //  Created by Langlet Maxime on 22/11/2019.
 //  Copyright © 2019 Langlet Maxime. All rights reserved.
+
+// Utilisé pour la remise intermédiaire mais plus dans le code actuel
 //
 
 #include "comparaison.hpp"
@@ -14,6 +16,7 @@ bool Sequence_comp(string fichier_fasta, vector<char> fichier_psq, vector<int> s
         int k=0;
         int offset = sequence_offset[i];
         for (int j =0; j<fichier_fasta.size(); j++) {
+            //dès qu'on trouve 2 résidus différent on arrête cette itération de la boucle
             if (fichier_fasta[j]!=score_Inverse(fichier_psq[j+offset])) {
                 k++;
                 break;

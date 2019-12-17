@@ -9,7 +9,7 @@
 #include "Fasta_To_Bits.hpp"
 
 
-string Fasta_To_String(ifstream &input){  //Il faudra changer le void en string apres pour comparaison
+string Fasta_To_String(ifstream &input){
     /*
     Style de format FASTA :
      >Rosetta_Example_1
@@ -49,13 +49,7 @@ string Fasta_To_String(ifstream &input){  //Il faudra changer le void en string 
                 }
             }
         }
-        /*
-        if(!nom.empty()){
-            cout << contenu << endl;
-            //cout << nom << ":" << string_To_Bits(contenu) << endl;
-            //return contenu;
-        }
-        */
+        
     }
     else{
         string pasouvert("Pas ouvert");
